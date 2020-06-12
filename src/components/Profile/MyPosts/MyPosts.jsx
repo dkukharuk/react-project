@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./MyPosts.module.css";
 import Post from "./Post/Post";
-import {addPostActionCreator, updateNewPostTextActionCreator} from "../../../data/state";
+import {addPostActionCreator, updateNewPostTextActionCreator} from "../../../data/reducers/profile-reducer";
 
 const MyPosts = (props) => {
     let postsElement = props.postsData.map( post => <Post id={post.id} message={post.message} likesCount={post.likesCont}/> );

@@ -1,5 +1,5 @@
 import * as serviceWorker from './serviceWorker';
-import store from "./data/state";
+import store from "./data/store";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -13,6 +13,7 @@ let rerenderEntireTree = (state) => {
                 <App
                     state={state}
                     dispatch={store.dispatch.bind(store)}
+                    store={store}
                 />
             </React.StrictMode>
         </BrowserRouter>, document.getElementById('root')
