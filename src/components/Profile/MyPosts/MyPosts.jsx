@@ -1,24 +1,20 @@
 import React from "react";
 import styles from "./MyPosts.module.css";
 import Post from "./Post/Post";
-import {addPostActionCreator, updateNewPostTextActionCreator} from "../../../data/reducers/profile-reducer";
 
 const MyPosts = (props) => {
+
     let postsElement = props.postsData.map( post => <Post id={post.id} message={post.message} likesCount={post.likesCont}/> );
 
     let newPostElement = React.createRef();
 
-    let AddPost = () => {
-        let action = addPostActionCreator();
-
-        props.dispatch(action);
+    let onAddPost = () => {
+        props.addPost();
     };
 
     let onPostChange = () => {
         let text = newPostElement.current.value;
-        let action = updateNewPostTextActionCreator(text);
-
-        props.dispatch(action);
+        props.updateNewPostText(text);
     };
 
     return (
@@ -33,7 +29,7 @@ const MyPosts = (props) => {
                     />
                 </div>
                 <div>
-                    <button onClick={ AddPost }>Add post</button>
+                    <button onClick={ onAddPost }>Add post</button>
                 </div>
             </div>
             <div className={styles.posts}>
@@ -43,4 +39,4 @@ const MyPosts = (props) => {
     );
 };
 
-export default MyPosts
+export default MyPosts;
