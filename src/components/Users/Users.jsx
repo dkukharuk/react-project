@@ -1,69 +1,92 @@
 import React from "react";
-import styles from './Users.module.css'
+import styles from "./Users.module.css";
+import userPhoto from "../../assets/images/user.png";
+import {NavLink} from "react-router-dom";
+import * as axios from "axios";
 
-const Users = (props) => {
+let Users = (props) => {
 
-    if (props.users.length === 0) {
-        props.setUsers([
+    let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
 
-            {
-                id: 1,
-                photoUrl: 'https://www.biography.com/.image/t_share/MTE4MDAzNDEwNDA1MzI4Mzk4/anna-kendrick-546534-1-402.jpg',
-                followed: false,
-                fullName: 'Anna',
-                status: 'I am a accountant',
-                location: {city: 'Kyiv', country: 'Ukraine'}
-            },
-            {
-                id: 2,
-                photoUrl: 'https://assets.unenvironment.org/s3fs-public/styles/ex/public/people/2017-10/Andrew.jpg?itok=aHAUqcpL',
-                followed: true,
-                fullName: 'Andrew',
-                status: 'I am a driver',
-                location: {city: 'New-York', country: 'USA'}
-            },
-            {
-                id: 3,
-                photoUrl: 'https://m.media-amazon.com/images/M/MV5BMTQxNTUzNTU0MV5BMl5BanBnXkFtZTcwNTY2NDY5OQ@@._V1_SY1000_SX800_AL_.jpg',
-                followed: false,
-                fullName: 'Marek',
-                status: 'I am a pilot',
-                location: {city: 'Gdansk', country: 'Poland'}
-            },
-
-        ]);
+    let pages = [];
+    for (let i = 1; i <= pagesCount; i++) {
+        pages.push(i);
     }
-
 
     return (
         <div>
+            <div>
+                {pages.map(page => {
+                    return (
+                        <span
+                            className={props.currentPage === page && styles.selectedPage}
+                            onClick={() => {
+                                props.onPageChanged(page)
+                            }}
+                        >{page}</span>
+                    )
+                })}
+            </div>
             {
                 props.users.map(user => <div key={user.id}>
                     <span>
                         <div>
-                            <img src={user.photoUrl} alt={user.fullName} className={styles.userPhoto}/>
+                            <NavLink to={'/profile/' + user.id}>
+                                <img src={user.photos.small !== null ? user.photos.small : userPhoto}
+                                     alt={user.fullName}
+                                     className={styles.userPhoto}/>
+                            </NavLink>
                         </div>
                         <div>
                             {user.followed
                                 ? <button onClick={() => {
-                                    props.unfollow(user.id)
+
+                                    axios.delete(`https://social-network.samuraijs.com/api/1.0/follow/${user.id}`,
+                                        {
+                                            withCredentials: true,
+                                            headers: {
+                                                'API-KEY': '94697c11-3e52-4780-b87b-6772336c701e'
+                                            }
+                                        })
+                                        .then(response => {
+                                            if (response.data.resultCode === 0) {
+                                                props.unfollow(user.id)
+                                            }
+                                        });
+
+
                                 }}>Unfollow</button>
                                 : <button onClick={() => {
-                                    props.follow(user.id)
+
+                                    axios.post(`https://social-network.samuraijs.com/api/1.0/follow/${user.id}`,
+                                        {}, {
+                                            withCredentials: true,
+                                            headers: {
+                                                'API-KEY': '94697c11-3e52-4780-b87b-6772336c701e'
+                                            }
+                                        })
+                                        .then(response => {
+                                            if (response.data.resultCode === 0) {
+                                                props.follow(user.id)
+                                            }
+                                        });
+
+
                                 }}>Follow</button>}
                         </div>
                     </span>
                     <span>
-                        <div>{user.fullName}</div>
+                        <div>{user.name}</div>
                         <div>{user.status}</div>
-                    </span><span>
-                        <div>{user.location.country}</div>
-                        <div>{user.location.city}</div>
+                    </span>
+                    <span>
+                        <div>{'user.location.country'}</div>
+                        <div>{'user.location.city'}</div>
                     </span>
                 </div>)
             }
         </div>
-    )
+    );
 };
 
 export default Users;
