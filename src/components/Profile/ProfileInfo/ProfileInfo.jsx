@@ -3,20 +3,22 @@ import styles from './ProfileInfo.module.css';
 import thumb from '../../../assets/images/thumb.png';
 import facebook from '../../../assets/images/facebook.png';
 import vkontakte from '../../../assets/images/vkontakte.png';
+import ProfileStatus from "./ProfileStatus";
 
 const ProfileInfo = (props) => {
     let lookingForAJob = props.profile.lookingForAJob;
 
     return (
         <div>
-            <div>
+            {/*<div>
                 <img
                     src="https://images.unsplash.com/photo-1509225770129-fbcf8a696c0b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
                     alt=""/>
-            </div>
+            </div>*/}
             <div className={styles.descriptionBlock}>
                 <div className={styles.userPhoto}>
                     <img src={props.profile.photos.large} alt=""/>
+                    <ProfileStatus status={'Hi my friends'}/>
                 </div>
                 <div className="userInfo">
                     <div className="aboutme">
